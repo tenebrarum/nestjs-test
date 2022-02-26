@@ -15,7 +15,7 @@ export class CatsService {
     return createDto;
   }
 
-  findAll(): Cat[] {
+  findAll() {
     return this.cats;
   }
 }
