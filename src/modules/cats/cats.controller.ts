@@ -1,10 +1,12 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseFilters } from '@nestjs/common';
 import { CustomException } from 'src/exceptions/custom.exception';
+import { HttpExceptionFilter } from 'src/filters/httpException.filter';
 import { CatsService } from './cats.service';
 import { CreateCatDto } from './dto/createCatDto';
 import { Cat } from './interfaces/cat.interface';
 
 @Controller('cats')
+@UseFilters(new HttpExceptionFilter())
 export class CatsController {
   constructor(private catsService: CatsService) { }
 
