@@ -1,17 +1,21 @@
-import { Body, Controller, Get, HttpStatus, Param, ParseIntPipe, Post, UseFilters, UsePipes } from '@nestjs/common';
+import { Body, Controller, Get, HttpStatus, Param, ParseIntPipe, Post, SetMetadata, UseFilters, UseGuards } from '@nestjs/common';
 import { CustomException } from 'src/exceptions/custom.exception';
 import { HttpExceptionFilter } from 'src/filters/httpException.filter';
-import { JoiValidationPipe } from 'src/pipes/valdiation.pipe';
+import { AuthGuard } from 'src/guards/auth.guard';
+import { Roles } from 'src/metadata/roles.metadata';
 import { CatsService } from './cats.service';
 import { CreateCatDto } from './dto/createCatDto';
 import { Cat } from './interfaces/cat.interface';
 
 @Controller('cats')
+@SetMetadata('roles', ['admin'])
+@UseGuards(AuthGuard)
 @UseFilters(new HttpExceptionFilter())
 export class CatsController {
   constructor(private catsService: CatsService) { }
 
   @Post()
+  @Roles('admin')
   async create(@Body() createDto: CreateCatDto): Promise<Cat> {
     return this.catsService.create(createDto);
   }
