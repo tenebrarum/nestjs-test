@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, UseFilters } from '@nestjs/common';
+import { Body, Controller, Get, Param, ParseIntPipe, Post, UseFilters } from '@nestjs/common';
 import { CustomException } from 'src/exceptions/custom.exception';
 import { HttpExceptionFilter } from 'src/filters/httpException.filter';
 import { CatsService } from './cats.service';
@@ -15,14 +15,18 @@ export class CatsController {
     return this.catsService.create(createDto);
   }
 
-  @Get(':name')
-  async findOne(@Param() params): Promise<Cat> {
-    return this.catsService.findByName(params.name);
+  @Get(':id')
+  async findOne(@Param('id', ParseIntPipe) id: number): Promise<Cat> {
+    return this.catsService.findbyId(id);
   }
 
   @Get()
-  async findAll(): Promise<string> {
-    // return 'This action returns all cats';
-    throw new CustomException()
+  async findAll(): Promise<Cat[]> {
+    return this.catsService.findAll();
+  }
+
+  @Get('/exception')
+  async exception(): Promise<Cat[]> {
+    throw new CustomException();
   }
 }
